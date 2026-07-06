@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+#![allow(unused_variables)]
 use std::collections::HashMap; // Если планируешь вводить данные с клавиатуры
 #[derive(Clone, Copy)]
 enum Side {
@@ -127,29 +129,27 @@ struct Order {
 }
 
 fn main() {
-    fn main() {
-        // 1. Создаем биржу
-        let mut exchange = Exchange::new();
-        println!("Биржа успешно запущена!");
+    // 1. Создаем биржу
+    let mut exchange = Exchange::new();
+    println!("Биржа успешно запущена!");
 
-        // 2. Регистрируем тебя
-        let my_id = exchange.register_us("Илья".to_string());
-        println!("Пользователь зарегистрирован. Твой ID: {}", my_id);
+    // 2. Регистрируем тебя
+    let my_id = exchange.register_us("Илья".to_string());
+    println!("Пользователь зарегистрирован. Твой ID: {}", my_id);
 
-        // 3. Закидываем тебе 1000 баксов на счет
-        let _ = exchange.deposit(my_id, Asset::Usdt, 1000.0);
-        println!("Депозит зачислен. Баланс проверен.");
+    // 3. Закидываем тебе 1000 баксов на счет
+    let _ = exchange.deposit(my_id, Asset::Usdt, 1000.0);
+    println!("Депозит зачислен. Баланс проверен.");
 
-        // 4. Пробуем создать ордер на покупку 5 Solana по цене 140$
-        println!("Пробуем купить 5 SOL по 140$ (всего надо 700$)...");
+    // 4. Пробуем создать ордер на покупку 5 Solana по цене 140$
+    println!("Пробуем купить 5 SOL по 140$ (всего надо 700$)...");
 
-        match exchange.add_order(my_id, Side::Buy, 140.0, 5.0) {
-            Ok(order_id) => {
-                println!("Успех! Ордер №{} добавлен в стакан покупок.", order_id);
-            }
-            Err(error) => {
-                println!("Что-то пошло не так: {:?}", error);
-            }
+    match exchange.add_order(my_id, Side::Buy, 140.0, 5.0) {
+        Ok(order_id) => {
+            println!("Успех! Ордер №{} добавлен в стакан покупок.", order_id);
+        }
+        Err(error) => {
+            println!("Что-то пошло не так: {:?}", error);
         }
     }
 }
