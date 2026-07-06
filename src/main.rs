@@ -67,7 +67,6 @@ impl Exchange {
         price: f64,
         amount: f64,
     ) -> Result<u64, ExchangeErr> {
-        // ШАГ 1: Только лезем к юзеру и списываем бабки
         match self.users.get_mut(&user_id) {
             Some(user) => match side {
                 Side::Buy => {
@@ -87,23 +86,20 @@ impl Exchange {
             None => return Err(ExchangeErr::UserNotFound),
         }
 
-        // ШАГ 2: Код создания ордера пишется ВСЕГО ОДИН РАЗ на всю функцию!
         let order_id = self.next_order_id;
         let new_order = Order {
             id: order_id,
             user_id,
-            side, // Мы просто прокидываем side из аргументов функции!
+            side,
             price,
             amount,
         };
 
-        // ШАГ 3: Быстро решаем, в какую стопку положить
         match side {
             Side::Buy => self.buy_orders.push(new_order),
             Side::Sell => self.sell_orders.push(new_order),
         }
 
-        // Двигаем счетчик и возвращаем ID
         self.next_order_id += 1;
         Ok(order_id)
     }
@@ -129,27 +125,23 @@ struct Order {
 }
 
 fn main() {
-    // 1. Создаем биржу
     let mut exchange = Exchange::new();
-    println!("Биржа успешно запущена!");
+    println!("Minibinc is running");
 
-    // 2. Регистрируем тебя
     let my_id = exchange.register_us("Илья".to_string());
-    println!("Пользователь зарегистрирован. Твой ID: {}", my_id);
+    println!("User has been registered. User's ID: {}", my_id);
 
-    // 3. Закидываем тебе 1000 баксов на счет
     let _ = exchange.deposit(my_id, Asset::Usdt, 1000.0);
-    println!("Депозит зачислен. Баланс проверен.");
+    println!("Deposit was successfull checking your balance.");
 
-    // 4. Пробуем создать ордер на покупку 5 Solana по цене 140$
-    println!("Пробуем купить 5 SOL по 140$ (всего надо 700$)...");
+    println!("trying to buy solana by price of 140 and amount of 5 ");
 
     match exchange.add_order(my_id, Side::Buy, 140.0, 5.0) {
         Ok(order_id) => {
-            println!("Успех! Ордер №{} добавлен в стакан покупок.", order_id);
+            println!("Success! №{} was added.", order_id);
         }
         Err(error) => {
-            println!("Что-то пошло не так: {:?}", error);
+            println!("Something went wrong: {:?}", error);
         }
     }
 }
